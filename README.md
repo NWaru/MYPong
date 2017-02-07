@@ -1,2 +1,3 @@
 # MYPong
-Simple pong 
+Simple pong project
+

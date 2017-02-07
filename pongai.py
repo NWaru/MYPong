@@ -29,8 +29,11 @@ bottomborder = False
 rect_x = 50
 rect_y = 50
 # Speed and direction of rectangle
-rect_change_x = 7
+rect_change_x = 9
 rect_change_y = 7
+
+speed_count = 0
+new_speed = rect_change_x
 
 field = pygame.Rect((0,0,WINDOWWIDTH,WINDOWLENGTH))
 
@@ -38,9 +41,9 @@ class Paddle():
     """paddles on screen"""
     def __init__(self):
         self.colour = WHITE
-        self.up_change = 25
-        self.down_change = 25
-        self.length = 670 / 3
+        self.up_change = -10
+        self.down_change = 10
+        self.length = 670 / 3 - 100
         self.width = 15
         self.x_pos = 0
         self.y_pos = 0
@@ -53,6 +56,8 @@ class Paddle():
 computer = Paddle()
 computer.rectangle[0] = 30
 computer.rectangle[1] = 200
+computer.up_change = -3
+computer.down_change = 3
 
 player = Paddle()
 player.rectangle[0] = 1155
@@ -69,27 +74,24 @@ move_down = False
 
 ball = pygame.Rect([rect_x,rect_y,15,15])
 
-def artificial_intelligence():
-    global move_up
-    global move_down
+thinking = False
 
-    if rect_change_x == -7:
-        #if computer.rectangle.top < ball.top and not at_top:
-            #move_up = True
-            #computer.up_change = 25
-        #elif not at_bottom:
-            #move_down = True
-            #computer.down_change = 25
-        computer.rectangle.top = ball.top
+def AI():
+    if computer.rectangle.centery >= ball.centery:
+        return computer.up_change
+    elif computer.rectangle.centery < ball.centery:
+        return computer.down_change
+    
+
 
     # elif rect_change_x == 7:
         # if computer.rectangle[1] != 200:
         # computer.rectanle[1] += 25
 
-    if move_up:
-        computer.rectangle[1] -= computer.up_change
-    if move_down:
-        computer.rectangle[1] += computer.down_change
+    #if move_up:
+        #computer.rectangle[1] -= computer.change
+    #if move_down:
+        #computer.rectangle[1] += computer.change
 
     
     # -------- Main Program Loop --------
@@ -101,10 +103,10 @@ while not done:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP and not topborder:
                 pressed_up = True
-                player.up_change = 25
+                player.up_change = -10
             if event.key == pygame.K_DOWN and not bottomborder: 
                 pressed_down = True
-                player.down_change = 25
+                player.down_change = 10
                 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP: 
@@ -113,10 +115,14 @@ while not done:
                 pressed_down = False
                 
     if pressed_up:
-        player.rectangle[1] -= player.up_change
+        player.rectangle[1] += player.up_change
     if pressed_down:
         player.rectangle[1] += player.down_change
         
+    if thinking:
+        computer.rectangle.centery += AI()  
+    
+
            
     # --- Game logic should go here
 
@@ -146,7 +152,7 @@ while not done:
     
     # Moves rectangle starting point
     ball[0] += rect_change_x
-    ball[1] += rect_change_y
+    ball[1] += rect_change_y 
     #Bounce rectangle
     if ball[1] > 665 or ball[1] < 20:
         rect_change_y = rect_change_y * -1
@@ -162,13 +168,15 @@ while not done:
         topborder = False
         bottomborder = True
     else:
-        player.up_change = 25
-        player.down_change = 25
+        player.up_change = -10
+        player.down_change = 10
         topborder = False
         bottomborder = False
 
-    if ball.colliderect(player.rectangle):
+    if ball.colliderect(player.rectangle) and ball.right > player.rectangle.left:
         rect_change_x = rect_change_x * -1
+        speed_count += 1
+        thinking = True
 
 
 
@@ -181,20 +189,25 @@ while not done:
         at_top = False
         at_bottom = True
     else:
-        computer.up_change = 25
-        computer.down_change = 25
+        computer.up_change = -3
+        computer.down_change = 3
         at_top = False
         at_bottom = False
 
     if ball.colliderect(computer.rectangle):
         rect_change_x = rect_change_x * -1
+        speed_count += 1
+        thinking = False
+        
+
+    #if speed_count/5 == 1:
+       #rect_change_x *= -1.5
     
 
     if ball[0] == 1500:
         ball[0] = 50
         ball[1] = 50
         
-    artificial_intelligence()
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
