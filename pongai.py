@@ -1,5 +1,7 @@
 
 import pygame
+import math
+import random
 
 # Define some colours
 BLACK = (0, 0, 0)
@@ -14,6 +16,7 @@ WINDOWWIDTH, WINDOWLENGTH = 1200, 700
 screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWLENGTH))
 
 pygame.display.set_caption("Bouncing Square")
+pygame.mouse.set_visible(0)
 
 # Loop until the user clicks the close button. 
 done = False
@@ -29,11 +32,13 @@ bottomborder = False
 rect_x = 50
 rect_y = 50
 # Speed and direction of rectangle
-rect_change_x = 9
+rect_change_x = 7
 rect_change_y = 7
 
 speed_count = 0
 new_speed = rect_change_x
+
+
 
 field = pygame.Rect((0,0,WINDOWWIDTH,WINDOWLENGTH))
 
@@ -43,7 +48,7 @@ class Paddle():
         self.colour = WHITE
         self.up_change = -10
         self.down_change = 10
-        self.length = 670 / 3 - 100
+        self.length = 670 / 3 - 80
         self.width = 15
         self.x_pos = 0
         self.y_pos = 0
@@ -56,8 +61,8 @@ class Paddle():
 computer = Paddle()
 computer.rectangle[0] = 30
 computer.rectangle[1] = 200
-computer.up_change = -3
-computer.down_change = 3
+computer.up_change = -7
+computer.down_change = 7
 
 player = Paddle()
 player.rectangle[0] = 1155
@@ -76,13 +81,27 @@ ball = pygame.Rect([rect_x,rect_y,15,15])
 
 thinking = False
 
+comp1_score = 0
+comp2_score = 0
+
+def print_score():
+    global comp1_score
+    global comp2_score 
+
+    font = pygame.font.SysFont('Courier New', 50, False, False)
+    score1 = font.render(str(comp1_score), True, WHITE)
+    score2 = font.render(str(comp2_score), True, WHITE)
+
+    screen.blit(score1, [325, 45])
+    screen.blit(score2, [875, 45])
+
+    
+
 def AI():
     if computer.rectangle.centery >= ball.centery:
         return computer.up_change
     elif computer.rectangle.centery < ball.centery:
         return computer.down_change
-    
-
 
     # elif rect_change_x == 7:
         # if computer.rectangle[1] != 200:
@@ -173,10 +192,11 @@ while not done:
         topborder = False
         bottomborder = False
 
-    if ball.colliderect(player.rectangle) and ball.right > player.rectangle.left:
+    if ball.colliderect(player.rectangle) and ball.left <= player.rectangle.right:
         rect_change_x = rect_change_x * -1
         speed_count += 1
         thinking = True
+        rect_change_x += -0.5
 
 
 
@@ -189,24 +209,32 @@ while not done:
         at_top = False
         at_bottom = True
     else:
-        computer.up_change = -3
-        computer.down_change = 3
+        computer.up_change = -7
+        computer.down_change = 7
         at_top = False
         at_bottom = False
 
-    if ball.colliderect(computer.rectangle):
+    if ball.colliderect(computer.rectangle) and ball.right  >= computer.rectangle.right:
         rect_change_x = rect_change_x * -1
         speed_count += 1
         thinking = False
-        
-
-    #if speed_count/5 == 1:
-       #rect_change_x *= -1.5
+        rect_change_x += 0.5
     
+    if ball[0] > 1300:
+        ball[0] = 600
+        ball[1] = random.randrange(21,664)
+        comp1_score += 1
+        rect_change_x = -7
+        thinking = True
 
-    if ball[0] == 1500:
-        ball[0] = 50
-        ball[1] = 50
+    if ball[0] < -99:
+        ball[0] = 600
+        ball[1] = random.randrange(21,664)
+        comp2_score += 1
+        rect_change_x = 7
+        thinking = True
+
+    print_score()
         
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
