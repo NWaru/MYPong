@@ -112,10 +112,7 @@ def AI():
     #if move_down:
         #computer.rectangle[1] += computer.change
 
-    
-    # -------- Main Program Loop --------
 while not done:
-     # --- Main event loop
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicke close
             done = True #Flags completeness and exits loop
@@ -141,22 +138,7 @@ while not done:
     if thinking:
         computer.rectangle.centery += AI()  
     
-
-           
-    # --- Game logic should go here
-
-    # --- Screen-clearing code goes here
-
-    # Here, we clear the screen to white. Don't put other drawing commands
-    # above this, or they will be erased with this command.
-
-    # If you want a background image, replace this clear with blit'ing the
-    # background image.
     screen.fill(BLACK)
-  
-    # --- Drawing code should go here 
-    # Draw on the screen a green line from (0,) to (100, 100)
-    # that is 5 pixels wide.
 
     # Draws rectangle
     pygame.draw.rect(screen, WHITE,ball)
@@ -235,11 +217,10 @@ while not done:
         thinking = True
 
     print_score()
-        
-    # --- Go ahead and update the screen with what we've drawn.
+     
     pygame.display.flip()
 
-    # --- Limit to 60 frames per second 
+    # Limit to 60 frames per second 
     clock.tick(60)
 
 # Close the window and quit.
