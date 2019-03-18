@@ -142,8 +142,6 @@ while not done:
 
     # Draws rectangle
     pygame.draw.rect(screen, WHITE,ball)
-    # Red rectangle inside white
-    # pygame.draw.rect(screen, RED, [rect_x + 10, rect_y + 10, 30, 30])
 
     player.draw(screen)
     computer.draw(screen)
