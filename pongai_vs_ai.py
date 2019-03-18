@@ -93,8 +93,6 @@ def print_score():
     screen.blit(score1, [325, 45])
     screen.blit(score2, [875, 45])
 
-    
-
 def AI():
     if computer.rectangle.centery >= ball.centery:
         return computer.up_change
@@ -107,41 +105,10 @@ def AI2():
     elif computer2.rectangle.centery < ball.centery:
         return computer2.down_change
 
-
-    # elif rect_change_x == 7:
-        # if computer.rectangle[1] != 200:
-        # computer.rectanle[1] += 25
-
-    #if move_up:
-        #computer.rectangle[1] -= computer.change
-    #if move_down:
-        #computer.rectangle[1] += computer.change
-
-    
-    # -------- Main Program Loop --------
 while not done:
-     # --- Main event loop
     for event in pygame.event.get(): # User did something
-        if event.type == pygame.QUIT: # If user clicke close
+        if event.type == pygame.QUIT: # If user clicked close
             done = True #Flags completeness and exits loop
-        #elif event.type == pygame.KEYDOWN:
-            #if event.key == pygame.K_UP and not topborder:
-                #pressed_up = True
-                #computer2.up_change = -10
-            #if event.key == pygame.K_DOWN and not bottomborder: 
-                #pressed_down = True
-                #computer2.down_change = 10
-                
-        #elif event.type == pygame.KEYUP:
-            #if event.key == pygame.K_UP: 
-                #pressed_up = False
-            #if event.key == pygame.K_DOWN:
-                #pressed_down = False
-                
-    #if pressed_up:
-        #computer2.rectangle[1] += computer2.up_change
-    #if pressed_down:
-        #computer2.rectangle[1] += computer2.down_change
         
     if thinking:
         computer.rectangle.centery += AI()
@@ -149,30 +116,10 @@ while not done:
     if thinking2:
         computer2.rectangle.centery += AI2()
     
-    
-
-           
-    # --- Game logic should go here
-
-    # --- Screen-clearing code goes here
-
-    # Here, we clear the screen to white. Don't put other drawing commands
-    # above this, or they will be erased with this command.
-
-    # If you want a background image, replace this clear with blit'ing the
-    # background image.
     screen.fill(BLACK)
   
-    # --- Drawing code should go here 
-    # Draw on the screen a green line from (0,) to (100, 100)
-    # that is 5 pixels wide.
-
     # Draws rectangle
     pygame.draw.rect(screen, WHITE,ball)
-    
-   
-    # Red rectangle inside white
-    # pygame.draw.rect(screen, RED, [rect_x + 10, rect_y + 10, 30, 30])
 
     computer2.draw(screen)
     computer.draw(screen)
@@ -254,7 +201,6 @@ while not done:
         thinking2 = True
 
     print_score()    
-    # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
     # --- Limit to 60 frames per second 
